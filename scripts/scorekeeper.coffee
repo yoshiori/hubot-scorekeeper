@@ -1,3 +1,5 @@
+# Author:
+#   yoshiori
 Url   = require "url"
 Redis = require "redis"
 
@@ -12,8 +14,11 @@ class Scorekeeper
   decrement: (user, func) ->
     client.zincrby prefix, -1, user, func
 
-  list: (func)->
-    client.zrangebyscore prefix, "-INF", "+INF", func
+  score: (user, func) ->
+    client.zscore prefix, user, func
+
+  rank: (func)->
+    client.zrevrangebyscore prefix, "+INF", "-INF", func
 
 module.exports = (robot) ->
   scorekeeper = new Scorekeeper
@@ -28,8 +33,13 @@ module.exports = (robot) ->
     scorekeeper.decrement user, (error, result) ->
       msg.send "#{user} decrement!! (total : #{result})"
 
-  robot.respond /scorekeeper list/i, (msg) ->
-    scorekeeper.list (error, result) ->
-      msg.send result
+  robot.respond /scorekeeper$/i, (msg) ->
+    scorekeeper.rank (error, result) ->
+      result.forEach (foo, i) ->
+        msg.send "#{i+1} : #{foo}"
 
   robot.respond /scorekeeper (.*)/i, (msg) ->
+    user = msg.match[1].trim()
+    if user
+      scorekeeper.score user, (error, result) ->
+        msg.send "#{user} (total : #{result})"
