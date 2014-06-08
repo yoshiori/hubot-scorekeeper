@@ -1,0 +1,14 @@
+{
+  "name": "hubot-scorekeeper",
+  "version": "0.0.0",
+  "description": "hubot script. increment decrement scorekeeper",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "redis": "0.1.0"
+  },
+  "author": "yoshiori",
+  "license": "MIT"
+}
