@@ -6,9 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "hubot",
+    "hubot-scripts"
+  ],
   "dependencies": {
     "redis": ">=0.10.3"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:yoshiori/hubot-scorekeeper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yoshiori/hubot-scorekeeper/issues"
+  },
+  "homepage": "https://github.com/yoshiori/hubot-scorekeeper",
   "author": "yoshiori",
   "license": "MIT"
 }
