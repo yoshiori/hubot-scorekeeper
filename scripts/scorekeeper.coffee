@@ -31,12 +31,12 @@ module.exports = (robot) ->
     if mention_matcher
       user = user.replace(mention_matcher, "")
     scorekeeper.increment user, (error, result) ->
-      msg.send "#{user} increment!! (total : #{result})"
+      msg.send "incremented #{user} (#{result} pt)"
 
   robot.hear /(.+)\-\-$/, (msg) ->
     user = msg.match[1].trim()
     scorekeeper.decrement user, (error, result) ->
-      msg.send "#{user} decrement!! (total : #{result})"
+      msg.send "decremented #{user} (#{result} pt)"
 
   robot.respond /scorekeeper$/i, (msg) ->
     scorekeeper.rank (error, result) ->
@@ -47,4 +47,4 @@ module.exports = (robot) ->
     user = msg.match[1].trim()
     if user
       scorekeeper.score user, (error, result) ->
-        msg.send "#{user} (total : #{result})"
+        msg.send "#{user} has #{result} points"
