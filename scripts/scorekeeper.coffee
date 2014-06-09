@@ -43,7 +43,7 @@ module.exports = (robot) ->
       result.forEach (name, i) ->
         msg.send "#{i+1} : #{name}"
 
-  robot.respond /scorekeeper (.+)$/i, (msg) ->
-    user = msg.match[1].trim()
+  robot.respond /scorekeeper (.+)$|what(?:'s| is)(?: the)? score of (.+)\??$/i, (msg) ->
+    user = (msg.match[1] || msg.match[2]).trim()
     scorekeeper.score user, (error, result) ->
       msg.send "#{user} has #{result} points"
