@@ -1,5 +1,20 @@
+# Description:
+#   Let hubot track your co-workers' honor points
+#
+# Configuration:
+#   HUBOT_SCOREKEEPER_MENTION_PREFIX
+#
+# Commands:
+#   <name>++ - Increment <name>'s point
+#   <name>-- - Decrement <name>'s point
+#   scorekeeper - Show scoreboard
+#   show scoreboard - Show scoreboard
+#   scorekeeper <name> - Show current point of <name>
+#   what's the score of <name> - Show current point of <name>
+#
 # Author:
 #   yoshiori
+
 Url   = require "url"
 Redis = require "redis"
 
