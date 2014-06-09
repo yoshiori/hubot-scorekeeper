@@ -1,5 +1,20 @@
+# Description:
+#   Let hubot track your co-workers' honor points
+#
+# Configuration:
+#   HUBOT_SCOREKEEPER_MENTION_PREFIX
+#
+# Commands:
+#   <name>++ - Increment <name>'s point
+#   <name>-- - Decrement <name>'s point
+#   scorekeeper - Show scoreboard
+#   show scoreboard - Show scoreboard
+#   scorekeeper <name> - Show current point of <name>
+#   what's the score of <name> - Show current point of <name>
+#
 # Author:
 #   yoshiori
+
 Url   = require "url"
 Redis = require "redis"
 
@@ -31,21 +46,20 @@ module.exports = (robot) ->
     if mention_matcher
       user = user.replace(mention_matcher, "")
     scorekeeper.increment user, (error, result) ->
-      msg.send "#{user} increment!! (total : #{result})"
+      msg.send "incremented #{user} (#{result} pt)"
 
   robot.hear /(.+)\-\-$/, (msg) ->
     user = msg.match[1].trim()
     scorekeeper.decrement user, (error, result) ->
-      msg.send "#{user} decrement!! (total : #{result})"
+      msg.send "decremented #{user} (#{result} pt)"
 
-  robot.respond /scorekeeper$/i, (msg) ->
+  robot.respond /scorekeeper$|show(?: me)?(?: the)? (?:scorekeeper|scoreboard)$/i, (msg) ->
     scorekeeper.rank (error, result) ->
       msg.send (for name, standing of result
         "#{standing}: #{name}"
       ).join("\n")
 
-  robot.respond /scorekeeper (.*)/i, (msg) ->
-    user = msg.match[1].trim()
-    if user
-      scorekeeper.score user, (error, result) ->
-        msg.send "#{user} (total : #{result})"
+  robot.respond /scorekeeper (.+)$|what(?:'s| is)(?: the)? score of (.+)\??$/i, (msg) ->
+    user = (msg.match[1] || msg.match[2]).trim()
+    scorekeeper.score user, (error, result) ->
+      msg.send "#{user} has #{result} points"
