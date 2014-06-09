@@ -22,9 +22,15 @@ class Scorekeeper
 
 module.exports = (robot) ->
   scorekeeper = new Scorekeeper
+  mention_prefix = process.env.HUBOT_SCOREKEEPER_MENTION_PREFIX
+  if mention_prefix
+    mention_matcher = new RegExp("^#{mention_prefix}")
 
   robot.hear /(.+)\+\+$/, (msg) ->
     user = msg.match[1].trim()
+    if mention_matcher
+      user = user.replace(mention_matcher, "")
+    msg.send user
     scorekeeper.increment user, (error, result) ->
       msg.send "#{user} increment!! (total : #{result})"
 
