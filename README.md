@@ -33,10 +33,12 @@ Add `hubot-scorekeeper` to `external-scripts.json`.
 
 ## Usage
 
-* `#{something}++` - increment something
-* `#{something}--` - decrement something
-* `hubot scorekeeper` - show rank.
-* `hubot scorekeeper #{something}` - show something's score
+* {name}++ - Increment {name}'s point
+* {name}-- - Decrement {name}'s point
+* scorekeeper - Show scoreboard
+* show scoreboard - Show scoreboard
+* scorekeeper {name} - Show current point of {name}
+* what's the score of {name} - Show current point of {name}
 
 ### mention's prefix
 
