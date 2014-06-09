@@ -30,7 +30,6 @@ module.exports = (robot) ->
     user = msg.match[1].trim()
     if mention_matcher
       user = user.replace(mention_matcher, "")
-    msg.send user
     scorekeeper.increment user, (error, result) ->
       msg.send "#{user} increment!! (total : #{result})"
 

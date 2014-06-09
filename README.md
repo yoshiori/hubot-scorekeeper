@@ -48,10 +48,8 @@ export HUBOT_SCOREKEEPER_MENTION_PREFIX="@"
 
 ```
 Hubot> @con_mame++
-Hubot> con_mame
 Hubot> con_mame increment!! (total : 1)
 Hubot> con_mame++
-Hubot> con_mame
 Hubot> con_mame increment!! (total : 2)
 ```
 
