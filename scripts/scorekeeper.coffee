@@ -38,7 +38,7 @@ module.exports = (robot) ->
     scorekeeper.decrement user, (error, result) ->
       msg.send "decremented #{user} (#{result} pt)"
 
-  robot.respond /scorekeeper$/i, (msg) ->
+  robot.respond /scorekeeper$|show(?: me)?(?: the)? (?:scorekeeper|scoreboard)$/i, (msg) ->
     scorekeeper.rank (error, result) ->
       result.forEach (name, i) ->
         msg.send "#{i+1} : #{name}"
