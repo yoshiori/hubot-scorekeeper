@@ -40,8 +40,9 @@ module.exports = (robot) ->
 
   robot.respond /scorekeeper$/i, (msg) ->
     scorekeeper.rank (error, result) ->
-      result.forEach (name, i) ->
-        msg.send "#{i+1} : #{name}"
+      msg.send (for name, standing of result
+        "#{standing}: #{name}"
+      ).join("\n")
 
   robot.respond /scorekeeper (.*)/i, (msg) ->
     user = msg.match[1].trim()
