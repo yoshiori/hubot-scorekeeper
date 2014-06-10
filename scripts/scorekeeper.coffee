@@ -41,17 +41,19 @@ module.exports = (robot) ->
   if mention_prefix
     mention_matcher = new RegExp("^#{mention_prefix}")
 
-  robot.hear /(.+)\+\+$/, (msg) ->
-    user = msg.match[1].trim()
+  userName = (user) ->
+    user = user.trim().split(/\s/).slice(-1)[0]
     if mention_matcher
       user = user.replace(mention_matcher, "")
+    user
+
+  robot.hear /(.+)\+\+$/, (msg) ->
+    user = userName(msg.match[1])
     scorekeeper.increment user, (error, result) ->
       msg.send "incremented #{user} (#{result} pt)"
 
   robot.hear /(.+)\-\-$/, (msg) ->
-    user = msg.match[1].trim()
-    if mention_matcher
-      user = user.replace(mention_matcher, "")
+    user = userName(msg.match[1])
     scorekeeper.decrement user, (error, result) ->
       msg.send "decremented #{user} (#{result} pt)"
 
@@ -62,6 +64,6 @@ module.exports = (robot) ->
       ).join("\n")
 
   robot.respond /scorekeeper (.+)$|what(?:'s| is)(?: the)? score of (.+)\??$/i, (msg) ->
-    user = (msg.match[1] || msg.match[2]).trim()
+    user = userName(msg.match[1] || msg.match[2])
     scorekeeper.score user, (error, result) ->
       msg.send "#{user} has #{result} points"

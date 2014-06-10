@@ -21,7 +21,7 @@ Add `hubot-scorekeeper` to your `package.json` dependencies.
 
 ```json
 "dependencies": {
-  "hubot-scorekeeper": ">= 0.0.3"
+  "hubot-scorekeeper": ">= 0.0.7"
 }
 ```
 
