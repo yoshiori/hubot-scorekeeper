@@ -50,6 +50,8 @@ module.exports = (robot) ->
 
   robot.hear /(.+)\-\-$/, (msg) ->
     user = msg.match[1].trim()
+    if mention_matcher
+      user = user.replace(mention_matcher, "")
     scorekeeper.decrement user, (error, result) ->
       msg.send "decremented #{user} (#{result} pt)"
 
