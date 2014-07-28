@@ -15,28 +15,48 @@
 # Author:
 #   yoshiori
 
-Url   = require "url"
-Redis = require "redis"
-
 class Scorekeeper
-  info   = Url.parse process.env.REDISTOGO_URL or process.env.REDISCLOUD_URL or process.env.BOXEN_REDIS_URL or process.env.REDIS_URL or 'redis://localhost:6379', true
-  client = Redis.createClient(info.port, info.hostname)
-  prefix = "scorekeeper"
+  _prefix = "scorekeeper"
+
+  constructor: (@robot) ->
+    @_scores = {}
+    @_load()
 
   increment: (user, func) ->
-    client.zincrby prefix, 1, user, func
+    @_scores[user] = @_scores[user] or 0
+    @_scores[user]++
+    @_save()
+    @score user, func
 
   decrement: (user, func) ->
-    client.zincrby prefix, -1, user, func
+    @_scores[user] = @_scores[user] or 0
+    @_scores[user]--
+    @_save()
+    @score user, func
 
   score: (user, func) ->
-    client.zscore prefix, user, func
+    func false, @_scores[user] or 0
 
   rank: (func)->
-    client.zrevrangebyscore prefix, "+INF", "-INF", func
+    ranking = (for name, score of @_scores
+      [name, score]
+    ).sort (a, b) -> b[1] - a[1]
+    func false, (for i in ranking
+      i[0]
+    )
+
+  _load: ->
+    scores_json = @robot.brain.get _prefix
+    scores_json = scores_json or '{}'
+    @_scores = JSON.parse scores_json
+
+  _save: ->
+    scores_json = JSON.stringify @_scores
+    @robot.brain.set _prefix, scores_json
+
 
 module.exports = (robot) ->
-  scorekeeper = new Scorekeeper
+  scorekeeper = new Scorekeeper robot
   mention_prefix = process.env.HUBOT_SCOREKEEPER_MENTION_PREFIX
   if mention_prefix
     mention_matcher = new RegExp("^#{mention_prefix}")
