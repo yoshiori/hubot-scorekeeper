@@ -19,16 +19,25 @@ class Scorekeeper
   _prefix = "scorekeeper"
 
   constructor: (@robot) ->
+    @_loaded = false
     @_scores = {}
-    @_load()
+    @robot.brain.on 'loaded', =>
+      @_load()
+      @_loaded = true
 
   increment: (user, func) ->
+    unless @_loaded
+      setTimeout((=> @increment(user,func)), 200)
+      return
     @_scores[user] = @_scores[user] or 0
     @_scores[user]++
     @_save()
     @score user, func
 
   decrement: (user, func) ->
+    unless @_loaded
+      setTimeout((=> @decrement(user,func)), 200)
+      return
     @_scores[user] = @_scores[user] or 0
     @_scores[user]--
     @_save()
