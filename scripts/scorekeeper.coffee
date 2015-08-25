@@ -46,6 +46,12 @@ class Scorekeeper
   score: (user, func) ->
     func false, @_scores[user] or 0
 
+  remove: (user, func) ->
+    score = @_scores[user]
+    delete @_scores[user]
+    @_save()
+    func false, score
+
   rank: (func)->
     ranking = (for name, score of @_scores
       [name, score]
@@ -91,6 +97,11 @@ module.exports = (robot) ->
       msg.send (for rank, name of result
         "#{parseInt(rank) + 1} : #{name}"
       ).join("\n")
+
+  robot.respond /scorekeeper remove (.+)$/i, (msg) ->
+    user = userName(msg.match[1])
+    scorekeeper.remove user, (error, result) ->
+      msg.send "#{user} has been removed. (#{result} pt)"
 
   robot.respond /scorekeeper (.+)$|what(?:'s| is)(?: the)? score of (.+)\??$/i, (msg) ->
     user = userName(msg.match[1] || msg.match[2])
