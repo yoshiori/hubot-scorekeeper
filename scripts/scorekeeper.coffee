@@ -82,15 +82,16 @@ module.exports = (robot) ->
       user = user.replace(mention_matcher, "")
     user
 
-  robot.hear /(.+)\+\+$/, (msg) ->
-    user = userName(msg.match[1])
-    scorekeeper.increment user, (error, result) ->
-      msg.send "incremented #{user} (#{result} pt)"
-
-  robot.hear /(.+)\-\-$/, (msg) ->
-    user = userName(msg.match[1])
-    scorekeeper.decrement user, (error, result) ->
-      msg.send "decremented #{user} (#{result} pt)"
+  robot.hear /\w+(?:(?:\+\+)|(?:\-\-))/g, (msg) ->
+    for str in msg.match
+      user = userName(str.slice(0, -2))
+      direction = str.slice(-2)
+      if direction == "++"
+        scorekeeper.increment user, (error, result) ->
+          msg.send "incremented #{user} (#{result} pt)"
+      else if direction == "--"
+        scorekeeper.decrement user, (error, result) ->
+          msg.send "decremented #{user} (#{result} pt)"
 
   robot.respond /scorekeeper$|show(?: me)?(?: the)? (?:scorekeeper|scoreboard)$/i, (msg) ->
     scorekeeper.rank (error, result) ->
